@@ -1,0 +1,207 @@
+table.large {border-collapse: separate;border: 3px solid #5069e4;border-width:  1px;font-size: 16px;float:left;}
+	table.large td,table.large th {width: 40px;text-align: left;vertical-align: top;background: url(cells.png);color: #444;position: relative;padding-left: 5px;padding-top: 5px;}
+	table.large td{height:55px;}
+		table.large td:hover,table.large th:hover { background-position: 0px -81px; color: #222; }
+		table.large td.has-events { background-position: 162px 0px; color: #444; }
+		table.large td.date_has_event:hover {	background-position: 162px -81px; }
+		table.large td.padding {	background: url(../img/calpad.jpg); }
+		table.large td.today { background-position: 81px 0px;	color: #A0274E; }
+		table.large td.today:hover { background-position: 81px -81px; }
+
+	table.large th {	height: 20px;font-weight: bold;font-size: 14px;}
+		table.large th.full{background: #FAFAFA; border-top: 2px solid #B7B7B7; border-left: 1px solid #B7B7B7;}
+		table.large th.next{text-align: right; padding-right: 4px;}
+		table.large th.next a, table.large th.previous a{font-size: 12px; color: #666666;}
+		table.large th.next:hover a, table.large th.previous:hover a{color: #D21E59;;}
+	
+
+	#jcal ul{display:none;}
+	#jcal th.full{text-align:center;}
+
+/* ---- table.mini 
+==================================== */
+div#featured-event.mini{display: none;}
+
+
+table.mini { margin-left: 15px; border-collapse: separate; border: 3px solid #E34980; 
+	border-width:  1px; font-size: 12px; float:left; }
+table.mini td,table.mini th { width:25px; text-align: left; vertical-align: top; background: url(cells.png);
+	color: #444; position: relative; padding-left: 5px;	padding-top: 5px; }
+table.mini th { height: 20px;	font-weight: bold; font-size: 12px; }
+	table.mini th.full{background: #FAFAFA; border-top: 2px solid #B7B7B7; border-left: 1px solid #B7B7B7;}
+	table.mini th.next {text-align: right; padding-right: 4px;}
+	table.mini th.next a, table.mini th.previous a{font-size: 12px; color: #666666;}
+	table.mini th.next:hover a, table.mini th.previous:hover a{color: #D21E59;;}
+
+table.mini td{ height:25px; }
+	table.mini td:hover,table.mini th:hover {	background-position: 0px -81px;	color: #222; }
+	table.mini td.has-events { background-position: 162px 0px; color: #444; }
+	table.mini td.date_has_event:hover { background-position: 162px -81px; }
+	table.mini td.padding { background: url(../img/calpad.jpg); }
+	table.mini td.today {	background-position: 81px 0px; color: #A0274E; }
+	table.mini td.today:hover { background-position: 81px -81px; }
+/* ---- *END* table.mini 
+==================================== */
+
+#event-list li span{display:none;}
+#event-list{margin-left:360px;}
+#event-list.mini{margin-left:250px; padding-right: 10px;}
+#event-list.mini p{display:none;}
+#event-list h2{margin:13px 0 5px 0;font-weight:bold; color: #384eb5; font-size: 16px;}
+
+#event-list p{font-size: 12px; font-weight: normal;}
+#event-list li{margin-left:10px;position:relative;}
+#event-list li.title{margin-left:0;}
+#event-list li h3 a{font-size: 12px; color: #000000; font-weight: bold; }
+#event-list li h3 a:hover{font-size: 12px; color: #384eb5; text-decoration: underline; font-weight: bold; }
+
+/* ---- Settings
+==================================== */
+
+table#jcal-settings th{text-align:left;left;vertical-align:middle;margin-top:10px;padding:6px;width:190px;border-left:3px solid #bdc6ee;}
+table#jcal-settings tr.odd{padding-top:10px;}
+table#jcal-settings td{position:relative;height:33px;vertical-align:top;padding-top:2px;border-left:3px solid #bdc6ee;}
+table#jcal-settings td input,table#jcal-settings td select{margin-left:10px;}
+
+
+/* ---- Tooltip
+==================================== */
+.has-events div{position: relative;}
+	.has-events h3{font-size:13px;}
+	.has-events h2{font-size:15px;}
+#jcal .has-events ul {text-align: left;position: absolute;display:none;z-index: 1000; padding: 15px; background: #E7ECF2; color: white;
+	border: 1px solid white; font-size: 15px; width: 200px; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px;
+	-border-radius: 3px; list-style: none; color: #444444; -webkit-box-shadow: 0px 8px 8px #333; bottom:0;left:0; }
+.has-events li span {display: block; font-size: 12px; text-align: justify; color: #555; }
+.has-events li span.title {font-weight: bold;}
+
+
+
+table.jCalendar {
+	border: 1px solid #000;
+	background: #aaa;
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+table.jCalendar th {
+	background: #333;
+	color: #fff;
+	font-weight: bold;
+	padding: 3px 5px;
+}
+
+table.jCalendar td {
+	background: #ccc;
+	color: #000;
+	padding: 3px 5px;
+	text-align: center;
+}
+table.jCalendar td.other-month {
+	background: #ddd;
+	color: #aaa;
+}
+table.jCalendar td.today {
+	background: #666;
+	color: #fff;
+}
+table.jCalendar td.selected {
+	background: #f66;
+	color: #fff;
+}
+table.jCalendar td.selected.dp-hover {
+	background: #f33;
+	color: #fff;
+}
+table.jCalendar td.dp-hover,
+table.jCalendar tr.activeWeekHover td {
+	background: #fff;
+	color: #000;
+}
+table.jCalendar tr.selectedWeek td {
+	background: #f66;
+	color: #fff;
+}
+table.jCalendar td.disabled, table.jCalendar td.disabled.dp-hover {
+	background: #bbb;
+	color: #888;
+}
+table.jCalendar td.unselectable,
+table.jCalendar td.unselectable:hover,
+table.jCalendar td.unselectable.dp-hover {
+	background: #bbb;
+	color: #888;
+}
+
+/* For the popup */
+
+/* NOTE - you will probably want to style a.dp-choose-date - see how I did it in demo.css */
+.dp-choose-date{display:none;}
+.dp-nav-prev-year,.dp-nav-next-year{display:none;}
+div.dp-popup {
+	position: relative;
+	background: #ccc;
+	font-size: 10px;
+	font-family: arial, sans-serif;
+	padding: 2px;
+	width: 200px;
+	line-height: 1.2em;
+}
+div#dp-popup {
+	position: absolute;
+	z-index: 199;
+}
+div.dp-popup h2 {
+	font-size: 12px;
+	text-align: center;
+	margin: 2px 0;
+	padding: 0;
+}
+a#dp-close {
+	font-size: 11px;
+	padding: 4px 0;
+	text-align: center;
+	display: block;
+}
+a#dp-close:hover {
+	text-decoration: underline;
+}
+div.dp-popup a {
+	color: #000;
+	text-decoration: none;
+	padding: 3px 2px 0;
+}
+div.dp-popup div.dp-nav-prev {
+	position: absolute;
+	top: 2px;
+	left: 4px;
+	width: 100px;
+}
+div.dp-popup div.dp-nav-prev a {
+	float: left;
+}
+/* Opera needs the rules to be this specific otherwise it doesn't change the cursor back to pointer after you have disabled and re-enabled a link */
+div.dp-popup div.dp-nav-prev a, div.dp-popup div.dp-nav-next a {
+	cursor: pointer;
+}
+div.dp-popup div.dp-nav-prev a.disabled, div.dp-popup div.dp-nav-next a.disabled {
+	cursor: default;
+}
+div.dp-popup div.dp-nav-next {
+	position: absolute;
+	top: 2px;
+	right: 4px;
+	width: 100px;
+}
+div.dp-popup div.dp-nav-next a {
+	float: right;
+}
+div.dp-popup a.disabled {
+	cursor: default;
+	color: #aaa;
+}
+div.dp-popup td {
+	cursor: pointer;
+}
+div.dp-popup td.disabled {
+	cursor: default;
+}
