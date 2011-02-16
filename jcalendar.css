@@ -137,6 +137,13 @@ table.jCalendar td.unselectable.dp-hover {
 /* NOTE - you will probably want to style a.dp-choose-date - see how I did it in demo.css */
 .dp-choose-date{display:none;}
 .dp-nav-prev-year,.dp-nav-next-year{display:none;}
+div.pops{
+	position:absolute;
+	top:30px;
+	width:97%;
+	height:83%;
+	background:white;
+}
 div.dp-popup {
 	position: relative;
 	background: #ccc;

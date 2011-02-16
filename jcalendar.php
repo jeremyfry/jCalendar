@@ -6,7 +6,8 @@ Author: Jeremy Fry
 Version: 1.0.0
 Author URI: http://www.jeremy-fry.com/
 */
-
+error_reporting(E_ALL);
+ini_set("display_errors",1);
 if ( !class_exists( 'jCalendar' ) ) {
 	define( 'JCALENDAR_VER', '1.0' );
 	class jCalendar 
@@ -97,8 +98,9 @@ if ( !class_exists( 'jCalendar' ) ) {
 		
 		#my box content
 		function events_fields() {
-		  wp_nonce_field( plugin_basename(__FILE__), 'event-meta' );
-		  $meta = get_post_meta($_GET['post']);
+			global $post;
+			wp_nonce_field( plugin_basename(__FILE__), 'event-meta' );
+			$meta = get_post_meta($post->ID,null);
 		  	?>
 			<table id="jcal-settings" cellspacing=0>
 				<tbody>
@@ -188,10 +190,15 @@ if ( !class_exists( 'jCalendar' ) ) {
 						</td>
 						<td>
 							<select id="repeat-selection">
+								<option value="<?=strtolower($meta['repeats'][0]);?>"><?=ucfirst(strtolower($meta['repeats'][0]));?></option>
 								<option value="never">Never</option>
 								<option value="daily">Daily</option>
 								<option value="monthly">Monthly</option>
 							</select>
+							<input type="hidden" name="recur-string" value="<?=$meta['recur-str'][0];?>">
+						</td>
+						<td class="recur-view">
+							<?=$meta['repeats-nice'][0];?>
 						</td>
 					
 					</tr>
@@ -236,7 +243,10 @@ if ( !class_exists( 'jCalendar' ) ) {
 			$endDate = date('Y-m-d', strtotime($_POST['end-date']));
 			$endTime = $_POST['end-time'];
 			$location = $_POST['event-location'];
-			$allDay = $_POST['all-day'];
+			$allDay = isSet($_POST['all-day']) ? $_POST['all-day'] : null;
+			$repeats = $_POST['repeats'];
+			$repeatsNice = $_POST['repeats-nice'];
+			$recurStr = $_POST['recur-string'];
 			update_post_meta($post_id,'startDate',$startDate);
 			update_post_meta($post_id,'startTime',$startTime);
 			update_post_meta($post_id,'featured',$featured);
@@ -244,8 +254,11 @@ if ( !class_exists( 'jCalendar' ) ) {
 			update_post_meta($post_id,'endTime',$endTime);
 			update_post_meta($post_id,'event-location',$location);
 			update_post_meta($post_id,'all-day',$allDay);
+			update_post_meta($post_id,'repeats',$repeats);
+			update_post_meta($post_id,'repeats-nice',$repeatsNice);
+			update_post_meta($post_id,'recur-str',$recurStr);
 			$eventID = get_post_meta($post_id,'event-id',true);
-			$eventID = self::updateEvent(self::$client,$eventID,$mypost->post_title,$mypost->post_content, $location, $startDate, $startTime,$endDate, $endTime, $allDay);
+			$eventID = self::updateEvent(self::$client,$eventID,$mypost->post_title,$mypost->post_content, $location, $startDate, $startTime,$endDate, $endTime, $allDay, $recurStr);
 			update_post_meta($post_id,'event-id',$eventID);
 			return;
 		}
@@ -262,8 +275,9 @@ if ( !class_exists( 'jCalendar' ) ) {
 			$location = get_post_meta($post_id,'event-location',true);
 			$allDay = get_post_meta($post_id,'all-day',true);
 			$featued =get_post_meta($post_id,'featured',true); 
+			$recurStr = get_post_meta($post_id,'recur-str',true);
 			$eventID = null;
-			$eventID = self::updateEvent(self::$client,$eventID,$mypost->post_title,$mypost->post_content, $location, $startDate, $startTime,$endDate, $endTime, $allDay);
+			$eventID = self::updateEvent(self::$client,$eventID,$mypost->post_title,$mypost->post_content, $location, $startDate, $startTime,$endDate, $endTime, $allDay, $recurStr);
 			update_post_meta($post_id,'event-id',$eventID);
 			return;
 		}
@@ -299,37 +313,44 @@ if ( !class_exists( 'jCalendar' ) ) {
 		}
 		
 		
-		function updateEvent ($client, $eventId = "", $title,$desc, $where, $startDate, $startTime,$endDate, $endTime, $allDay) 
-		{
+		function updateEvent ($client, $eventId = "", $title,$desc, $where, $startDate, $startTime,$endDate, $endTime, $allDay, $recurStr){
 			$gdataCal = new Zend_Gdata_Calendar($client);
-		   #update event
-			if($eventId != "" && $eventId != null)
-			{
+			#update event
+			if($eventId != "" && $eventId != null){
 				if ($event = self::getEvent($client, $eventId)) {
 					$event->title = $gdataCal->newTitle($title);
 					$event->where = array($gdataCal->newWhere($where));
 					$event->content = $gdataCal->newContent("$desc");
 					
 					$when = $gdataCal->newWhen();
-					if($allDay)
-					{
+					if($allDay){
 						$when->startTime = "{$startDate}";
 						$when->endTime = "{$endDate}";
+						$event->when = array($when);
+					}elseif(empty($recurStr)){
+						$when->startTime = "{$startDate}T{$startTime}:00.000".self::$tzOffset.":00";
+						$when->endTime = "{$endDate}T{$endTime}:00.000".self::$tzOffset.":00";
+						$event->when = array($when);
 					}else{
-						$when->startDate = "{$startDate}T{$startTime}:00.000".self::$tzOffset.":00";
-						$when->endDate = "{$endDate}T{$endTime}:00.000".self::$tzOffset.":00";
+						if(!$allDay){
+							$recurStr = "DTSTART;TZID=".self::$tzOffset.";VALUE=DATE-TIME:".str_replace("-","",$startDate)."T".str_replace(":","",$startTime)."00\r\n".$recurStr;
+							$recurStr = "DTEND;TZID=".self::$tzOffset.";VALUE=DATE-TIME:".str_replace("-","",$endDate)."T".str_replace(":","",$endTime)."00\r\n".$recurStr;
+							$event->recurrence = $gdataCal->newRecurrence($recurStr);
+						}else{
+							$recurStr = "DTSTART;VALUE=DATE:".str_replace("-","",$startDate)."\r\n".$recurStr;
+							$recurStr = "DTEND;VALUE=DATE:".str_replace("-","",$endDate)."\r\n".$recurStr;
+							$event->recurrence = $gdataCal->newRecurrence($recurStr);
+						}
 					}
-					$event->when = array($when);
 					
-					try {
+					try{
 						$event->save();
-					} catch (Zend_Gdata_App_Exception $e) {
-					#var_dump($e);
-					return null;
-				}
-				return $eventId;
+					}catch(Zend_Gdata_App_Exception $e){
+						return null;
+					}
+					return $eventId;
 				} else {
-				return null;
+					return null;
 				}
 			}else{
 				#not previous id so create new
@@ -669,7 +690,7 @@ if (!class_exists( 'jCalendarDisplay' ) ) {
 			return false;
 		}
 	}#end Class
-	$cal = new jCalendarDisplay();
+	$cal = new jCalendarDisplay(null);
 }#end Class Check
 
 
