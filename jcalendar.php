@@ -470,7 +470,7 @@ if (!class_exists( 'jCalendarDisplay' ) ) {
 				}else{	
 					$date = $date[1][0];
 				}
-				if(preg_match_all("/CLASS=([a-zA-Z0-9]*)\s/",$content,$classMatch)===false){ 
+				if(preg_match_all("/CLASS=([a-zA-Z0-9]+)[\s}]/",$content,$classMatch)===false){ 
 					$this->className = "test"; 
 				}else{
 					$this->className = $classMatch[1][0];
